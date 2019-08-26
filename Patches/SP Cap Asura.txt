@@ -1,0 +1,16 @@
+battle.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+		case MO_EXTREMITYFIST:
+			skillratio += 100 * (7 + sstatus->sp / 10);
+			skillratio = min(500000,skillratio); //We stop at roughly 50k SP for overflow protection
+			break;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+		case MO_EXTREMITYFIST:
+			skillratio += 100*(7 + min(sstatus->sp,6000)/10);
+			skillratio = min(500000,skillratio); //We stop at roughly 50k SP for overflow protection
+			break;

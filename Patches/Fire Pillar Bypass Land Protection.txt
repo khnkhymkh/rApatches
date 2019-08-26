@@ -1,0 +1,26 @@
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+	case WZ_FIREPILLAR:
+		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+			return NULL;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	case WZ_FIREPILLAR:
+		//if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+		//	return NULL;
+
+//------------------------------------------------------------------------------
+FIND:
+
+			//It deletes everything except traps and barriers
+			if ((!(skill_get_inf2(unit->group->skill_id)&(INF2_TRAP)) && !(skill_get_inf3(unit->group->skill_id)&(INF3_NOLP))) || unit->group->skill_id == WZ_FIREPILLAR || unit->group->skill_id == GN_HELLS_PLANT) {
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+			//It deletes everything except traps and barriers
+			if ((!(skill_get_inf2(unit->group->skill_id)&(INF2_TRAP)) && !(skill_get_inf3(unit->group->skill_id)&(INF3_NOLP))) || unit->group->skill_id == GN_HELLS_PLANT) {

@@ -1,0 +1,21 @@
+pc.cpp
+
+FIND:
+	intif_Mail_requestinbox(sd->status.char_id, 0, MAIL_INBOX_NORMAL); // MAIL SYSTEM - Request Mail Inbox
+	intif_request_questlog(sd);
+	
+ADD BELOW:
+	// Security System
+	if( pc_readaccountreg(sd,add_str("#BLOCKPASS")) > 0 )
+	{
+		clif_displaymessage(sd->fd, "Item Security System ENABLE : Use @security for more options.");
+		sd->state.protection_acc = 1;
+	}
+	else
+		clif_displaymessage(sd->fd, "Item Security System DISABLE : Use @security for more options.");
+		
+
+REMOVE:
+
+	if( pc_readaccountreg(sd, add_str("#BLOCKPASS")) > 0 )
+		sd->state.protection_acc = 1;

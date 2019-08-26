@@ -1,0 +1,555 @@
+Index: conf/msg_conf/map_msg.conf
+===================================================================
+--- conf/msg_conf/map_msg.conf	(revision 27893)
++++ conf/msg_conf/map_msg.conf	(working copy)
+@@ -1667,5 +1667,8 @@
+ 1503: You've entered a PK Zone.
+ 1504: You've entered a PK Zone (safe until level %d).
+ 
++// Security System - [Orce]
++4000: Please disable the security system to perform this operation.
++
+ //Custom translations
+ import: conf/msg_conf/import/map_msg_eng_conf.txt
+Index: npc/custom/protecao_conta.txt
+===================================================================
+--- npc/custom/account_protection.txt	(nonexistent)
++++ npc/custom/account_protection.txt	(working copy)
+@@ -0,0 +1,218 @@
++//  ___________________________________________________________________
++// /                                                                   \
++// |            _           _   _   _                                  |
++// |           | |__  _ __ / \ | |_| |__   ___ _ __   __ _             |
++// |           | '_ \| '__/ _ \| __| '_ \ / _ \ '_ \ / _` |            |
++// |           | |_) | | / ___ \ |_| | | |  __/ | | | (_| |            |
++// |           |_.__/|_|/_/   \_\__|_| |_|\___|_| |_|\__,_|            |
++// |                                                                   |
++// |                        brAthena  Script                           |
++// |                        www.brathena.org                           |
++// |-------------------------------------------------------------------|
++// |                                                                   |
++// | Copyright (c) brAthena Dev Team                                   |
++// |                                                                   |
++// |-------------------------------------------------------------------|
++// | Licensed under the GNU GPL license                                |
++// | For more information read the LICENSE                             |
++// | file at the root of the emulator                                  |
++// |-------------------------------------------------------------------|
++// | Author:                                                           |
++// |		- Orce                                                     |
++// | Review:                                                           |
++// |		- Aly                                                      |
++// |		- Vör                                                      |
++// |		- Popcorn                                                  |
++// |                                                                   |
++// | Description: NPC that manages the account protection system.      | 
++// |                                                                   |
++// \___________________________________________________________________/
++//
++-	script	ProtectionAcc	-1,{
++	
++	OnInit:
++		///////////////////////////////////////////////////////////////////////////////
++		// Configure below the name of the command to block negotiations
++		// Change the word ' security ' to the command you want
++		///////////////////////////////////////////////////////////////////////////////
++		setd ".comando$", "security";
++		
++		///////////////////////////////////////////////////////////////////////////////
++		// Set down the GM level that will have access to the account passwords.
++		///////////////////////////////////////////////////////////////////////////////
++		set .gmacess,99;
++		
++		///////////////////////////////////////////////////////////////////////////////
++		// Don't move from here unless you know what you're doing
++		///////////////////////////////////////////////////////////////////////////////
++		bindatcmd .comando$, "ProtectionAcc::OnProtecAcc";
++		end;	
++		
++	OnPCLoginEvent:	
++		///////////////////////////////////////////////////////////////////////////////
++		// Informs whether the Account protection system is active
++		///////////////////////////////////////////////////////////////////////////////
++		dispbottom "[Account Protection]";
++		if(#BLOCKPASS){
++			dispbottom "Security System Enable: Use @"+.comando$+" For more information.";
++		} else {
++			dispbottom "Security System Disable: Use @"+.comando$+" For more information.";
++		}
++		end;
++		
++OnProtecAcc:	
++	mes "^FF6600.:: Account Protection ::.^000000";
++	mes " ";
++	if(#BLOCKPASS){
++		mes "» Proteção: ^2E8B57Enable^000000";
++		if(blockcheck()){
++			mes "» Negotiations: ^2E8B57Blocked^000000";
++		} else {
++			mes "» Negotiations: ^FF0000Released^000000";
++		}
++			set .@menu$,select( (blockcheck() ? "» ^FF0000Release^000000 Negotiations":"» ^2E8B57Blocked^000000 Negotiations")+":» Change Password::» ^FF0000Remove Password^000000:» Information:» Exit:"+(getgroupid()>=.gmacess ? "» ^FF0000[ADM]^000000 Recover Password":""));
++	} else {
++		mes "^FF0000Unprotected Account^000000";
++		mes " ";
++		mes "Would like to ^2E8B57Activate^000000 and set a password for ^2E8B57protect^000000 your account?";			
++		set .@menu$,select("» Yes::» No::"+(getgroupid()>=.gmacess ? "» ^FF0000[ADM]^000000 Recover Password":""))+2;
++	}
++		switch (.@menu$)
++		{
++			next;
++			case 1:
++					if(blockcheck())
++					{
++						mes "^FF6600.:: Account Protection ::.^000000";
++						mes " ";
++						mes "Enter the password to ^FF0000Release^000000 Trading items.";
++						
++						input .@senha;
++						if( #BLOCKPASS != .@senha ){ 
++							mes " "; 
++							mes "^FF0000Ø Incorrect password!! Ø^000000"; 
++							close; 
++						}
++						
++						mes " ";
++						mes "Item Negotiations: ^FF0000Released^000000.";
++						message strcharinfo(0), "Item Negotiations: Released.";
++						
++						block 0;
++						
++					} else {
++						mes "^FF6600.:: Account Protection ::.^000000";
++						mes " ";
++						mes "Item Negotiations: ^2E8B57Blocked^000000.";
++						message strcharinfo(0), "Item Negotiations: Blocked.";
++						block 1;
++					}
++					close;
++					
++			case 2:
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "Please enter your current protection password:";
++					mes " ";
++					mes "Report only numbers.";
++					input .@senha;							
++					if( #BLOCKPASS != .@senha ) { mes "Ø Incorrect password!! Ø"; close; }
++					next;
++					
++			case 3:
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "Please inform your protection password:";
++					mes "^333399-> Report only numbers^000000";
++					mes "Note: The password may contain a maximum of 5 digits and at least 1.";
++					input .@senha;							
++					if( .@senha < 1 || .@senha > 99999 ) { mes "      Ø Invalid password! Ø"; close; }
++					next;
++					
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "Please confirm your protection password:";
++					mes " ";
++					mes "^333399-> Report only numbers^000000";
++					input .@Rsenha;
++					next;
++    
++					mes "^FF6600.:: Account Protection ::..^000000";
++					if( .@senha != .@Rsenha )
++					{
++						mes "The confirmation password and password are different.";
++						mes " ";
++						mes "Ø Please repeat the procedure";
++						close;
++					}
++    
++					mes "ƒ Your password for the Account Protection System has been saved! ƒ";
++					mes " ";
++					mes "ƒ Use @"+.comando$+" To set up the system! ƒ";
++					set #BLOCKPASS, .@senha;
++					close;
++			
++			case 4:
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "^FF0000[Attention]^000000";
++					mes "By removing the password you will be disabling the account protection system.";
++					mes "Do you draw continue?";
++					if(select("» ^2E8B57No^000000:» Yes (^FF0000Remove/Disable Protection^000000)")==1)close;
++					next;
++					
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "Please enter your current protection password:";
++					mes " ";
++					mes "Report only numbers.";
++					input .@senha;
++					if( #BLOCKPASS != .@senha ) { mes "Incorrect password!!."; close; }
++					next;
++					
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "Account protection system disabled and password removed successfully.";
++					mes "Use @"+.comando$+" If you want to activate the system again.";
++					set #BLOCKPASS, 0;
++					block 0;
++					close;
++					
++			case 5:
++					mes "^FF6600.:: Account Protection ::.^000000";
++					mes "This system will prevent your items from being thrown on the ground, sold or negotiated without your permission.";
++					next;
++					
++					mes "^FF6600.:: Account Protection ::.^000000";
++					mes "Once activated, as soon as you exit the account (log out) and log in, the negotiations will be blocked and released only after you enter the security password.";
++					next;
++					
++					mes "^FF6600.:: Account Protection ::.^000000";
++					mes "!!! ^993300[Attention]^000000 !!!";
++					mes "For your safety it is highly recommended that the account protection system be activated.";
++					close;			
++			case 6:
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes "Use @"+.comando$+" If you want to set up the account protection system.";
++					close;
++			
++			case 7:
++					function getpass;
++
++					mes "^FF6600.:: Account Protection ::..^000000";
++					mes " ";
++					mes "Please enter the account ID you want to retrieve the password for:";
++					mes " ";
++					input .@acc;				
++					set .@ResultPass, getpass("SelectPass",.@acc);
++					if(!.@ResultPass){
++						next;
++						mes "^FF6600.:: Account Protection ::..^000000";
++						mes " ";
++						mes "This account does not exist or the protection system is not activated in this account.";
++					} else { mes "Account password: "+.@ResultPass; }
++					close;
++		}
++		
++	function	getpass	{
++
++		if( getarg(0) == "SelectPass" )
++		{
++			query_sql "SElECT `value` FROM `acc_reg_num_db` WHERE `key`='#BLOCKPASS' AND `account_id`='"+ getarg(1) +"'", .@pass;
++			return (.@pass);
++		}
++		else return 0;
++	}
++
++}
+Index: npc/scripts_custom.conf
+===================================================================
+--- npc/scripts_custom.conf	(revision 27893)
++++ npc/scripts_custom.conf	(working copy)
+@@ -20,6 +20,9 @@
+ //npc: npc/custom/item_signer.txt
+ //npc: npc/custom/woe_controller.txt
+ 
++// -------------------- Account Protection ---------------------
++npc: npc/custom/account_protection.txt
++
+ // ----------------------- Other Scripts -----------------------
+ // -- Private MVP & Branch Room
+ //npc: npc/custom/etc/mvp_room.txt
+Index: src/map/atcommand.cpp
+===================================================================
+--- src/map/atcommand.cpp	(revision 27893)
++++ src/map/atcommand.cpp	(working copy)
+@@ -6867,6 +6867,12 @@
+ 
+ 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return -1;
++	}
++
+ 	if (!message || !*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
+ 		clif_displaymessage(fd, msg_txt(sd,1230)); // Please enter a player name (usage: @trade <char name>).
+ 		return -1;
+Index: src/map/buyingstore.cpp
+===================================================================
+--- src/map/buyingstore.cpp	(revision 27893)
++++ src/map/buyingstore.cpp	(working copy)
+@@ -84,6 +84,12 @@
+ 		return 3;
+ 	}
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return 1;
++	}
++
+ 	if( map_getcell(sd->bl.m, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING) )
+ 	{// custom: no vending cells
+ 		clif_displaymessage(sd->fd, msg_txt(sd,204)); // "You can't open a shop on this cell."
+Index: src/map/clif.cpp
+===================================================================
+--- src/map/clif.cpp	(revision 27893)
++++ src/map/clif.cpp	(working copy)
+@@ -11554,6 +11554,11 @@
+ 
+ 	if( sd->state.trading || !sd->npc_shopid )
+ 		result = 1;
++	else if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		result = 1;
++	}
+ 	else
+ 		result = npc_buylist(sd, n, (struct s_npc_buy_list*)RFIFOP(fd,info->pos[1]));
+ 
+@@ -11591,6 +11596,11 @@
+ 
+ 	if (sd->state.trading || !sd->npc_shopid)
+ 		fail = 1;
++	else if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		fail = 1;
++	}
+ 	else
+ 		fail = npc_selllist(sd,n,item_list);
+ 
+@@ -13272,6 +13282,12 @@
+ 		return;
+ 	}
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return;
++	}
++
+ 	if( message[0] == '\0' ) // invalid input
+ 		return;
+ 
+@@ -15916,6 +15932,13 @@
+ 		return;
+ 	}
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_Auction_setitem(sd->fd, idx, true);
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return;
++	}
++
+ 	if( !pc_can_give_items(sd) || sd->inventory.u.items_inventory[idx].expire_time ||
+ 			!sd->inventory.u.items_inventory[idx].identify ||
+ 			(sd->inventory.u.items_inventory[idx].bound && !pc_can_give_bounded_items(sd)) ||
+@@ -16310,18 +16333,20 @@
+ /// 0288 <packet len>.W <kafra points>.L <count>.W { <amount>.W <name id>.W }.4B*count (PACKETVER >= 20100803)
+ /// 0848 <packet len>.W <count>.W <packet len>.W <kafra points>.L <count>.W { <amount>.W <name id>.W <tab>.W }.6B*count (PACKETVER >= 20130000)
+ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd){
+-	struct s_packet_db* info;
+-	int cmd = RFIFOW(fd,0);
++    struct s_packet_db* info;
++    int cmd = RFIFOW(fd,0);
+ 
+-	nullpo_retv(sd);
++    nullpo_retv(sd);
+ 
+-	info = &packet_db[cmd];
++    info = &packet_db[cmd];
+ 
+-	if( sd->state.trading || !sd->npc_shopid ) {
+-		clif_cashshop_ack(sd,1);
+-		return;
+-	}
+-	else {
++    if( sd->state.trading || !sd->npc_shopid ) {
++        clif_cashshop_ack(sd,1);
++        return;
++    } else if( sd->state.protection_acc ) {
++        clif_displaymessage(sd->fd, msg_txt(sd,4000));
++        return;
++    } else {
+ #if PACKETVER < 20101116
+ 		short nameid = RFIFOW(fd,info->pos[0]);
+ 		short amount = RFIFOW(fd,info->pos[1]);
+Index: src/map/mail.cpp
+===================================================================
+--- src/map/mail.cpp	(revision 27893)
++++ src/map/mail.cpp	(working copy)
+@@ -120,6 +120,12 @@
+ 	if( pc_istrading(sd) )
+ 		return MAIL_ATTACH_ERROR;
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return MAIL_ATTACH_ERROR;
++	}
++
+ 	if( idx == 0 ) { // Zeny Transfer
+ 		if( !pc_can_give_items(sd) )
+ 			return MAIL_ATTACH_UNTRADEABLE;
+Index: src/map/map.cpp
+===================================================================
+--- src/map/map.cpp	(revision 27893)
++++ src/map/map.cpp	(working copy)
+@@ -116,7 +116,7 @@
+ static int bl_list_count = 0;
+ 
+ #ifndef MAP_MAX_MSG
+-	#define MAP_MAX_MSG 1550
++	#define MAP_MAX_MSG 5000
+ #endif
+ 
+ struct map_data map[MAX_MAP_PER_SERVER];
+Index: src/map/pc.cpp
+===================================================================
+--- src/map/pc.cpp	(revision 27893)
++++ src/map/pc.cpp	(working copy)
+@@ -4728,6 +4728,12 @@
+ 		return false; //Can't drop items in nodrop mapflag maps.
+ 	}
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return false;
++	}
++
+ 	if( !pc_candrop(sd,&sd->inventory.u.items_inventory[n]) )
+ 	{
+ 		clif_displaymessage (sd->fd, msg_txt(sd,263));
+@@ -5090,6 +5096,10 @@
+ 
+ 	run_script(script,0,sd->bl.id,fake_nd->bl.id);
+ 	potion_flag = 0;
++
++	if( pc_readaccountreg(sd, add_str("#BLOCKPASS")) > 0 )
++		sd->state.protection_acc = 1;
++
+ 	return 1;
+ }
+ 
+@@ -5113,6 +5123,12 @@
+ 		return 1;
+ 	data = itemdb_search(item->nameid);
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return 1;
++	}
++
+ 	if( data->stack.cart && amount > data->stack.amount )
+ 	{// item stack limitation
+ 		return 1;
+Index: src/map/pc.hpp
+===================================================================
+--- src/map/pc.hpp	(revision 27893)
++++ src/map/pc.hpp	(working copy)
+@@ -267,6 +267,7 @@
+ 		bool keepshop; // Whether shop data should be removed when the player disconnects
+ 		bool mail_writing; // Whether the player is currently writing a mail in RODEX or not
+ 		bool cashshop_open;
++		unsigned int protection_acc : 1; // Account Protection - [Orce brAthena]
+ 	} state;
+ 	struct {
+ 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
+Index: src/map/script.cpp
+===================================================================
+--- src/map/script.cpp	(revision 27893)
++++ src/map/script.cpp	(working copy)
+@@ -23728,6 +23728,29 @@
+ 	return SCRIPT_CMD_SUCCESS;
+ }
+ 
++/*==========================================
++ * Account Protection - [Orce brAthena]
++ *------------------------------------------*/
++BUILDIN_FUNC(block) {
++	struct map_session_data *sd = NULL;
++	if (!script_rid2sd(sd))
++		return SCRIPT_CMD_SUCCESS;
++
++	int value = script_getnum(st, 2);
++
++	sd->state.protection_acc = (value) ? 1 : 0;
++	return SCRIPT_CMD_SUCCESS;
++}
++
++BUILDIN_FUNC(blockcheck) {
++	struct map_session_data *sd = NULL;
++	if (!script_rid2sd(sd))
++		return SCRIPT_CMD_SUCCESS;
++
++	script_pushint(st,sd->state.protection_acc);
++	return SCRIPT_CMD_SUCCESS;
++}
++
+ #include "../custom/script.inc"
+ 
+ // declarations that were supposed to be exported from npc_chat.c
+@@ -24376,6 +24399,9 @@
+ 	BUILDIN_DEF2(round, "ceil", "i"),
+ 	BUILDIN_DEF2(round, "floor", "i"),
+ 	BUILDIN_DEF(getequiptradability, "i?"),
++
++	BUILDIN_DEF(block,"i"), // Account Protection
++	BUILDIN_DEF(blockcheck,""), // Account Protection
+ #include "../custom/script_def.inc"
+ 
+ 	{NULL,NULL,NULL},
+Index: src/map/storage.cpp
+===================================================================
+--- src/map/storage.cpp	(revision 27893)
++++ src/map/storage.cpp	(working copy)
+@@ -444,6 +444,12 @@
+  */
+ void storage_storagegettocart(struct map_session_data* sd, struct s_storage *stor, int index, int amount)
+ {
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return;
++	}
++
+ 	unsigned char flag = 0;
+ 	enum e_storage_add result;
+ 
+@@ -664,6 +670,12 @@
+ 		return false;
+ 	}
+ 
++	if( sd->state.protection_acc )
++	{
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return false;
++	}
++
+ 	if(itemdb_isstackable2(id)) { //Stackable
+ 		for(i = 0; i < MAX_GUILD_STORAGE; i++) {
+ 			if(compare_item(&stor->u.items_guild[i], item_data)) {
+Index: src/map/trade.cpp
+===================================================================
+--- src/map/trade.cpp	(revision 27893)
++++ src/map/trade.cpp	(working copy)
+@@ -37,11 +37,21 @@
+ 		return; //Can't trade in notrade mapflag maps.
+ 	}
+ 
++	if( sd->state.protection_acc ) {
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return;
++	}
++
+ 	if (target_sd == NULL || sd == target_sd) {
+ 		clif_tradestart(sd, 1); // character does not exist
+ 		return;
+ 	}
+ 
++	if( target_sd->state.protection_acc ) {
++		clif_displaymessage(sd->fd, msg_txt(sd,4000));
++		return;
++	}
++
+ 	if (target_sd->npc_id) { // Trade fails if you are using an NPC.
+ 		clif_tradestart(sd, 2);
+ 		return;

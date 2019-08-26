@@ -1,0 +1,83 @@
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+		//Special message when trying to use strip on FCP [Jobbie]
+		if( sd && skill_id == ST_FULLSTRIP && tsc && tsc->data[SC_CP_WEAPON] && tsc->data[SC_CP_HELM] && tsc->data[SC_CP_ARMOR] && tsc->data[SC_CP_SHIELD])
+		{
+			clif_gospel_info(sd, 0x28);
+			break;
+		}
+
+		//Attempts to strip at rate i and duration d
+		if( (i = skill_strip_equip(src,bl, location, i, skill_lv, d)) || (skill_id != ST_FULLSTRIP && skill_id != GC_WEAPONCRUSH ) )
+			clif_skill_nodamage(src,bl,skill_id,skill_lv,i);
+
+		//Nothing stripped.
+		if( sd && !i )
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+		break;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+		//Special message when trying to use strip on FCP [Jobbie]
+		if( sd && skill_id == ST_FULLSTRIP && tsc && tsc->data[SC_CP_WEAPON] && tsc->data[SC_CP_HELM] && tsc->data[SC_CP_ARMOR] && tsc->data[SC_CP_SHIELD])
+			{
+				clif_gospel_info(sd, 0x28);
+				break;
+			}
+			if ( sd && tsc && sd->sc.data[SC_SPIRIT] && sd->sc.data[SC_SPIRIT]->val2 == SL_ROGUE 
+			&& rand()%100 < 50 &&	// Strip Chance
+				( skill_id == RG_STRIPWEAPON && tsc->data[SC_CP_WEAPON] 
+				|| skill_id == RG_STRIPSHIELD && tsc->data[SC_CP_SHIELD]
+				|| skill_id == RG_STRIPARMOR && tsc->data[SC_CP_ARMOR] 
+				|| skill_id == RG_STRIPHELM && tsc->data[SC_CP_HELM] ) ) {
+
+				int item_id = 7139; // Glistening Coat
+				int ii;
+
+				ARR_FIND( 0, MAX_INVENTORY, ii, sd->inventory.u.items_inventory[ii].nameid == item_id );
+				if ( ii < MAX_INVENTORY ) {
+					pc_delitem( sd, ii, 1, 0, 0, LOG_TYPE_CONSUME);
+
+				switch ( skill_id ) {
+				case RG_STRIPWEAPON:
+					status_change_end( bl, SC_CP_WEAPON, INVALID_TIMER );
+					sc_start( NULL, bl, SC_STRIPWEAPON, 100, skill_lv, d );
+					clif_displaymessage(sd->fd,"~ Weapon Strip Successful !!");
+					break;
+
+				case RG_STRIPSHIELD:
+					status_change_end( bl, SC_CP_SHIELD, INVALID_TIMER );
+					sc_start( NULL, bl, SC_STRIPSHIELD, 100, skill_lv, d );
+					clif_displaymessage(sd->fd,"~ Shield Strip Successful !!");
+					break;
+
+				case RG_STRIPARMOR:
+					status_change_end( bl, SC_CP_ARMOR, INVALID_TIMER );
+					sc_start( NULL, bl, SC_STRIPARMOR, 100, skill_lv, d );
+					clif_displaymessage(sd->fd,"~ Armor Strip Successful !!");
+					break;
+
+				case RG_STRIPHELM:
+					status_change_end( bl, SC_CP_HELM, INVALID_TIMER );
+					sc_start( NULL, bl, SC_STRIPHELM, 100, skill_lv, d );
+					clif_displaymessage(sd->fd,"~ Helm Strip Successful !!");
+					break;
+					}
+
+					clif_skill_nodamage( src, bl, skill_id, skill_lv, i );
+					break;
+				}
+			}
+
+		//Attempts to strip at rate i and duration d
+		if( (i = skill_strip_equip(src,bl, location, i, skill_lv, d)) || (skill_id != ST_FULLSTRIP && skill_id != GC_WEAPONCRUSH ) )
+			clif_skill_nodamage(src,bl,skill_id,skill_lv,i);
+
+		//Nothing stripped.
+		if( sd && !i )
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+		break;
+	}

@@ -1,0 +1,225 @@
+#*********************************#
+#     UPDATE OPERATING SYSTEM     #
+#*********************************#
+apt-get update
+apt-get upgrade
+
+#*********************************#
+#           INSTALL SUDO          #
+#*********************************#
+apt-get install expect wget sudo
+
+#*********************************#
+#      INSTALL MYSQL STUFFS       #
+#*********************************#
+apt-get install libaio1
+apt-get install libdbd-mysql-perl
+apt-get install libdbi-perl
+apt-get install libterm-readkey-perl
+export DEBIAN_FRONTEND=noninteractive 
+apt-get install mysql-server
+mysql_secure_installation
+
+#*********************************#
+#      INSTALL APACHE2 & PHP      #
+#*********************************#
+apt-get install apache2
+apt install apt-transport-https lsb-release ca-certificates
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+apt update
+apt install php7.2
+apt search php7.2
+apt install php7.2 php7.2-cli php7.2-common php7.2-json php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring
+php -v
+a2dismod php7.0
+systemctl restart apache2
+a2enmod php7.2
+systemctl restart apache2
+nano /var/www/html/phpinfo.php
+#**** APPEND ****#
+<?php
+phpinfo();
+?>
+
+#*********************************#
+#       INSTALL DESKTOP VNC       #
+#*********************************#
+apt-get install  xfonts-base
+apt-get install xfce4 xfce4-goodies
+apt-get install gnome-icon-theme tightvncserver
+
+#*********************************#
+#   INSTALL rA SPECIFIC PACKAGE   #
+#*********************************#
+apt-get install git
+apt-get install make
+apt-get install default-libmysqlclient-dev
+apt-get install zlib1g-dev libpcre3-dev nano zip unzip zenity
+echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list
+apt-get update
+apt-get install g++
+
+#*********************************#
+#      CREATE USER 'rathena'      #
+#*********************************#
+(password: K1h2a3y4m5)
+adduser rathena
+usermod -aG sudo rathena
+
+#*********************************#
+#      SETUP DESKTOP STUFFS       #
+#*********************************#
+mkdir -p /usr/share/cervantes/
+cd /usr/share/cervantes/
+wget -q https://vhost.rocks/cervantes_scripts/files.zip
+unzip -qq files.zip
+cd links
+mkdir -p /home/rathena/Desktop
+cp -R * /home/rathena/Desktop
+cd /usr/share/cervantes/scripts
+chmod +x *
+cd /home/rathena/Desktop
+chmod +x *
+
+#*********************************#
+#     CREATE VNC SERVER FILES     #
+#*********************************#
+cd /usr/local/bin
+wget -q https://vhost.rocks/cervantes_scripts/myvncserver
+chmod +x myvncserver
+cd /lib/systemd/system/
+wget -q https://vhost.rocks/cervantes_scripts/myvncserver.service
+systemctl daemon-reload
+systemctl enable myvncserver.service
+
+#*********************************#
+#     INSTALL NECESSARY FILES     #	KKK123
+#*********************************#
+chown -R rathena:rathena /home/rathena
+chown -R rathena:rathena /usr/share/cervantes
+cd /home/rathena
+vncserver
+sudo -u rathena sh -c "myvncserver stop"
+mkdir -p /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/
+touch /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "<channel name=\"xfce4-desktop\" version=\"1.0\">" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "  <property name=\"backdrop\" type=\"empty\">" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "    <property name=\"screen0\" type=\"empty\">" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "      <property name=\"monitor0\" type=\"empty\">" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"brightness\" type=\"empty\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"color1\" type=\"empty\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"color2\" type=\"empty\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"color-style\" type=\"empty\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"image-path\" type=\"string\" value=\"/usr/share/cervantes/img/bg.png\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"image-show\" type=\"empty\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"last-image\" type=\"empty\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "        <property name=\"last-single-image\" type=\"string\" value=\"/usr/share/cervantes/img/bg.png\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "      </property>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "    </property>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "  </property>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "  <property name=\"desktop-icons\" type=\"empty\">" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "    <property name=\"icon-size\" type=\"uint\" value=\"32\"/>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "  </property>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+echo "</channel>" >> /home/rathena/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+
+touch /home/rathena/.config/mimeapps.list
+echo "[Default Applications]" >> /home/rathena/.config/mimeapps.list
+echo "text/plain=mousepad.desktop" >> /home/rathena/.config/mimeapps.list
+echo "" >> /home/rathena/.config/mimeapps.list
+echo "[Added Associations]" >> /home/rathena/.config/mimeapps.list
+echo "text/plain=mousepad.desktop;" >> /home/rathena/.config/mimeapps.list
+echo ""
+chown -R rathena:rathena /home/rathena/
+
+#*********************************#
+#        GIT CLONE rAthena        #
+#*********************************#
+git clone https://github.com/rathena/rathena.git /home/rathena/Desktop/rAthena
+./configure
+make server
+
+#*********************************#
+#      CREATE MYSQL DATABASE      #
+#*********************************#
+cd
+mysqladmin -u root -pragnarok create ragnarok
+mysql -u root -pragnarok -e "CREATE USER ragnarok@localhost IDENTIFIED BY 'K1h2a3y4m5';"
+mysql -u root -pragnarok -e "GRANT ALL PRIVILEGES ON ragnarok.* TO 'ragnarok'@'localhost';"
+mysql -u root -pragnarok -e "GRANT ALL PRIVILEGES ON *.* TO 'ragnarok'@'localhost';"
+mysql -u root -pragnarok -e "FLUSH PRIVILEGES;"
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/main.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/logs.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/item_cash_db.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/item_cash_db2.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/item_db.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/item_db2.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/item_db2_re.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/item_db_re.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_db.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_db2.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_db2_re.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_db_re.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_skill_db.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_skill_db2.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_skill_db2_re.sql
+mysql -u root -pragnarok ragnarok  < /home/rathena/Desktop/rAthena/sql-files/mob_skill_db_re.sql
+mysql -u root -pragnarok -e "USE ragnarok; UPDATE login SET userid = 'K1h2a3y4m5', user_pass = 'K1h2a3y4m5' where sex = 'S';"
+
+#*********************************#
+#        INSTALL PHPMYADMIN       #
+#*********************************#
+cd /var/www/html
+wget -q https://files.phpmyadmin.net/phpMyAdmin/4.7.3/phpMyAdmin-4.7.3-english.zip
+unzip -qq phpMyAdmin-4.7.3-english.zip
+rm phpMyAdmin-4.7.3-english.zip
+mv phpMyAdmin-4.7.3-english phpmyadmin
+cd phpmyadmin
+mv config.sample.inc.php config.inc.php
+echo "<?php" > /var/www/html/phpmyadmin/config.inc.php
+BLOWFISH=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+echo "\$cfg['blowfish_secret'] = '${BLOWFISH}';" >> /var/www/html/phpmyadmin/config.inc.php
+echo "\$i=0;" >> /var/www/html/phpmyadmin/config.inc.php
+echo "\$i++;" >> /var/www/html/phpmyadmin/config.inc.php
+echo "\$cfg['Servers'][\$i]['host'] = 'localhost';" >> /var/www/html/phpmyadmin/config.inc.php
+echo "\$cfg['Servers'][\$i]['AllowRoot'] = false;" >> /var/www/html/phpmyadmin/config.inc.php
+echo "\$cfg['Servers'][\$i]['AllowNoPassword'] = false;" >> /var/www/html/phpmyadmin/config.inc.php
+echo "\$cfg['Servers'][\$i]['auth_type']     = 'cookie';" >> /var/www/html/phpmyadmin/config.inc.php
+chown -R www-data:www-data /var/www/html
+chmod 0660 /var/www/html/phpmyadmin/config.inc.php
+
+#*********************************#
+#       PREPARE CONFIG FILES      #
+#*********************************#
+echo "userid: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/char_conf.txt
+echo "passwd: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/char_conf.txt
+echo "char_ip: 45.77.246.246" >> /home/rathena/Desktop/rAthena/conf/import/char_conf.txt
+
+echo "userid: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/map_conf.txt
+echo "passwd: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/map_conf.txt
+echo "map_ip: 45.77.246.246" >> /home/rathena/Desktop/rAthena/conf/import/map_conf.txt
+
+echo "login_server_pw: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/inter_conf.txt
+echo "ipban_db_pw: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/inter_conf.txt
+echo "char_server_pw: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/inter_conf.txt
+echo "map_server_pw: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/inter_conf.txt
+echo "log_db_pw: K1h2a3y4m5" >> /home/rathena/Desktop/rAthena/conf/import/inter_conf.txt
+
+touch /home/rathena/Desktop/Info.txt
+echo "Server IP: 45.77.246.246" >> /home/rathena/Desktop/Info.txt
+echo "-- MySQL --" >> /home/rathena/Desktop/Info.txt
+echo "root password is 'ragnarok', but can only be accessed locally from this system." >> /home/rathena/Desktop/Info.txt
+echo "For all other MySQL uses, please use the following credentials:" >> /home/rathena/Desktop/Info.txt
+echo "User: ragnarok" >> /home/rathena/Desktop/Info.txt
+echo "Password: K1h2a3y4m5" >> /home/rathena/Desktop/Info.txt
+
+echo "-- VNC Access --" >> /home/rathena/Desktop/Info.txt
+echo "Server IP: 45.77.246.246:1" >> /home/rathena/Desktop/Info.txt
+echo "Password: KKK123\n" >> /home/rathena/Desktop/Info.txt
+
+echo "-- phpMyAdmin --" >> /home/rathena/Desktop/Info.txt
+echo " * Access phpMyAdmin from this server using the browser and going to http://localhost/phpmyadmin" >> /home/rathena/Desktop/Info.txt
+echo " or" >> /home/rathena/Desktop/Info.txt
+echo " * Access phpMyAdmin from anywhere by browsing to http://45.77.246.246/phpmyadmin" >> /home/rathena/Desktop/Info.txt
+echo "Access from root user is disabled, so you will need to login as 'ragnarok' with your MySQL password.\n" >> /home/rathena/Desktop/Info.txt

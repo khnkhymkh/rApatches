@@ -1,0 +1,29 @@
+unit.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+	if(!ud->state.running) // Need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
+		unit_stop_walking(src, 1); // Even though this is not how official works but this will do the trick. bugreport:6829
+
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	if(!ud->state.running) // Need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
+		unit_stop_walking(src, 0); // Even though this is not how official works but this will do the trick. bugreport:6829
+
+//------------------------------------------------------------------------------
+FIND:
+
+	unit_stop_walking(src,1);
+
+	// SC_MAGICPOWER needs to switch states at start of cast
+	skill_toggle_magicpower(src, skill_id);
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	unit_stop_walking(src,0);
+
+	// SC_MAGICPOWER needs to switch states at start of cast
+	skill_toggle_magicpower(src, skill_id);

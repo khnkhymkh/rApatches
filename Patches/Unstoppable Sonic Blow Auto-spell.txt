@@ -1,0 +1,16 @@
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+			if (skill == AS_SONICBLOW)
+				pc_stop_attack(sd); //Special case, Sonic Blow autospell should stop the player attacking.
+			else if (skill == PF_SPIDERWEB) //Special case, due to its nature of coding.
+				type = CAST_GROUND;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+			//if (skill == AS_SONICBLOW)
+			//	pc_stop_attack(sd); //Special case, Sonic Blow autospell should stop the player attacking.
+			else if (skill == PF_SPIDERWEB) //Special case, due to its nature of coding.
+				type = CAST_GROUND;

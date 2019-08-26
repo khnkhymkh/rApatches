@@ -1,0 +1,17 @@
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+				clif_delitem(sd,idx,1,3);
+				clif_upgrademessage(sd->fd, 0, item->nameid);
+				clif_inventorylist(sd);
+				clif_refine(sd->fd,0,idx,item->refine);
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+				clif_delitem(sd,idx,1,3);
+				clif_additem(sd,idx,1,0);
+				clif_upgrademessage(sd->fd, 0, item->nameid);
+				clif_inventorylist(sd);
+				clif_refine(sd->fd,0,idx,item->refine);
