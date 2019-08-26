@@ -1,0 +1,15 @@
+battle.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+		case AC_DOUBLE:
+				skillratio += 10 * (skill_lv - 1);
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+		case AC_DOUBLE:
+			if (sd && sd->sc.data[SC_SPIRIT] && (sd->sc.data[SC_SPIRIT]->val2 == SL_ROGUE || sd->sc.data[SC_SPIRIT]->val2 == SL_HUNTER || sd->sc.data[SC_SPIRIT]->val2 == SL_BARDDANCER))
+				skillratio += 30 * skill_lv;
+			else
+				skillratio += 10 * (skill_lv - 1);

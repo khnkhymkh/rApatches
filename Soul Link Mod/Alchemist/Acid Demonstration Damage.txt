@@ -1,0 +1,6 @@
+soul_link.yml
+//------------------------------------------------------------------------------
+SL_ALCHEMIST: |
+    {
+        bonus2 bSkillAtk,"CR_ACIDDEMONSTRATION",12;
+    }

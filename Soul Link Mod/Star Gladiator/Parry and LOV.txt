@@ -1,0 +1,87 @@
+soul_link.yml
+//------------------------------------------------------------------------------
+SL_STAR: |
+    {
+        skill "WZ_VERMILION",10; skill "LK_PARRYING",10;
+    }
+	
+//------------------------------------------------------------------------------
+
+
+
+
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+	if(require.mhp > 0 && get_percentage(status->hp, status->max_hp) > require.mhp) {
+		//mhp is the max-hp-requirement, that is,
+		//you must have this % or less of HP to cast it.
+		clif_skill_fail(sd,skill_id,USESKILL_FAIL_HP_INSUFFICIENT,0);
+		return false;
+	}
+
+	if( require.weapon && !pc_check_weapontype(sd,require.weapon) ) {
+		switch(skill_id) {
+			case RA_AIMEDBOLT:
+				break;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	if(require.mhp > 0 && get_percentage(status->hp, status->max_hp) > require.mhp) {
+		//mhp is the max-hp-requirement, that is,
+		//you must have this % or less of HP to cast it.
+		clif_skill_fail(sd,skill_id,USESKILL_FAIL_HP_INSUFFICIENT,0);
+		return false;
+	}
+
+	if( require.weapon && !(pc_check_weapontype(sd,require.weapon) 
+	|| (skill_id = LK_PARRYING && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_KNIGHT && sd->status.weapon == W_1HSWORD) 
+	|| (skill_id = LK_PARRYING && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_STAR && sd->status.weapon == W_BOOK)
+	|| (skill_id = GS_GATLINGFEVER && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_DUST && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_FULLBUSTER && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_SPREADATTACK && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_GROUNDDRIFT && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER))) {
+		switch(skill_id) {
+			case RA_AIMEDBOLT:
+
+//------------------------------------------------------------------------------
+FIND:
+
+	if( require.hp > 0 && status->hp <= (unsigned int)require.hp) {
+		clif_skill_fail(sd,skill_id,USESKILL_FAIL_HP_INSUFFICIENT,0);
+		return false;
+	}
+
+	if( require.weapon && !pc_check_weapontype(sd,require.weapon) ) {
+		clif_skill_fail(sd,skill_id,USESKILL_FAIL_THIS_WEAPON,0);
+		return false;
+	}
+
+	if( require.ammo ) { //Skill requires stuff equipped in the ammo slot.
+		uint8 extra_ammo = 0;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	if( require.hp > 0 && status->hp <= (unsigned int)require.hp) {
+		clif_skill_fail(sd,skill_id,USESKILL_FAIL_HP_INSUFFICIENT,0);
+		return false;
+	}
+
+	if( require.weapon && !(pc_check_weapontype(sd,require.weapon) 
+	|| (skill_id = LK_PARRYING && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_KNIGHT && sd->status.weapon == W_1HSWORD) 
+	|| (skill_id = LK_PARRYING && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_STAR && sd->status.weapon == W_BOOK)
+	|| (skill_id = GS_GATLINGFEVER && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_DUST && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_FULLBUSTER && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_SPREADATTACK && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER) 
+	|| (skill_id = GS_GROUNDDRIFT && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_GUNNER && sd->status.weapon == W_REVOLVER))) {
+		clif_skill_fail(sd,skill_id,USESKILL_FAIL_THIS_WEAPON,0);
+		return false;
+	}
+
+	if( require.ammo ) { //Skill requires stuff equipped in the ammo slot.
+		uint8 extra_ammo = 0;

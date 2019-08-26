@@ -1,0 +1,44 @@
+skill.cpp
+//------------------------------------------------------------------------------
+REMOVE: 
+
+	case AM_ACIDTERROR:
+	
+//------------------------------------------------------------------------------
+FIND:
+
+	case MO_COMBOFINISH:
+		if (!(flag&1) && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_MONK)
+		{	//Becomes a splash attack when Soul Linked.
+			map_foreachinshootrange(skill_area_sub, bl,
+				skill_get_splash(skill_id, skill_lv),BL_CHAR|BL_SKILL,
+				src,skill_id,skill_lv,tick, flag|BCT_ENEMY|1,
+				skill_castend_damage_id);
+		} else
+			skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
+		break;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	case MO_COMBOFINISH:
+		if (!(flag&1) && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_MONK)
+		{	//Becomes a splash attack when Soul Linked.
+			map_foreachinshootrange(skill_area_sub, bl,
+				skill_get_splash(skill_id, skill_lv),BL_CHAR|BL_SKILL,
+				src,skill_id,skill_lv,tick, flag|BCT_ENEMY|1,
+				skill_castend_damage_id);
+		} else
+			skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
+		break;
+	
+	case AM_ACIDTERROR:
+		if (!(flag&1) && sc && sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_ALCHEMIST)
+		{	//Becomes a splash attack when Soul Linked.
+			map_foreachinshootrange(skill_area_sub, bl,
+				skill_get_splash(skill_id, skill_lv),BL_CHAR|BL_SKILL,
+				src,skill_id,skill_lv,tick, flag|BCT_ENEMY|1,
+				skill_castend_damage_id);
+		} else
+			skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
+		break;

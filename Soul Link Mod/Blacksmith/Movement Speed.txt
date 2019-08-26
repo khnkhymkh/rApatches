@@ -1,0 +1,6 @@
+soul_link.yml
+//------------------------------------------------------------------------------
+SL_BLACKSMITH: |
+    {
+        bonus2 bSkillAtk,"WS_CARTTERMINATION",12; bonus bSpeedAddRate,20;
+    }

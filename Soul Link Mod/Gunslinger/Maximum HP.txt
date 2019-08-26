@@ -1,0 +1,24 @@
+status.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+			if(sc->data[SC_MTF_MHP])
+				bonus += sc->data[SC_MTF_MHP]->val1;
+			if(sc->data[SC_MARIONETTE])
+				bonus -= 1000;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+			if(sc->data[SC_MTF_MHP])
+				bonus += sc->data[SC_MTF_MHP]->val1;
+			if(sc->data[SC_MARIONETTE])
+				bonus -= 1000;
+			if(sc->data[SC_SPIRIT] && (sc->data[SC_SPIRIT]->val2 == SL_STAR))
+				bonus += ((TBL_PC*)bl)->status.base_level * 50;
+			if(sc->data[SC_SPIRIT] && (sc->data[SC_SPIRIT]->val2 == SL_GUNNER))
+				bonus += ((TBL_PC*)bl)->status.base_level * 150;
+			if(sc->data[SC_SPIRIT] && (sc->data[SC_SPIRIT]->val2 == SL_NINJA))
+				bonus += ((TBL_PC*)bl)->status.base_level * 150;
+			if(sc->data[SC_SPIRIT] && (sc->data[SC_SPIRIT]->val2 == SL_WIZARD || sc->data[SC_SPIRIT]->val2 == SL_SAGE))
+				bonus += ((TBL_PC*)bl)->status.base_level * 100;

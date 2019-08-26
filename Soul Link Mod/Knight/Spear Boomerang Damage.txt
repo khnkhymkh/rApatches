@@ -1,0 +1,17 @@
+battle.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+		case KN_SPEARBOOMERANG:
+				skillratio += 50 * skill_lv;
+			break;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+		case KN_SPEARBOOMERANG:
+			if (sd && sd->sc.data[SC_SPIRIT] && sd->sc.data[SC_SPIRIT]->val2 == SL_KNIGHT)
+				skillratio += 200 * skill_lv;
+			else
+				skillratio += 50 * skill_lv;
+			break;

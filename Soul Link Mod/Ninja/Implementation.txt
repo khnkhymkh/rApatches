@@ -1,0 +1,172 @@
+db/import/skill_tree.txt
+//------------------------------------------------------------------------------
+4049,574,5,0,0,0,0,0,0,0,0,0,0	//SL_NINJA#Spirit of the Ninja#
+4049,575,5,0,0,0,0,0,0,0,0,0,0	//SL_GUNNER#Spirit of the Gunslinger#
+//------------------------------------------------------------------------------
+
+
+
+db/import/skill_cast_db.txt
+//------------------------------------------------------------------------------
+//-- SL_NINJA
+574,1000,500,0,150000:200000:250000:300000:350000,0,0
+
+//-- SL_GUNNER
+575,1000,500,0,150000:200000:250000:300000:350000,0,0
+//------------------------------------------------------------------------------
+
+
+
+db/import/skill_db.txt
+//------------------------------------------------------------------------------
+574,9,6,16,0,0x1,0,5,1,yes,0,0x200,0,magic,0,0x0,	SL_NINJA,Spirit of the Ninja
+575,9,6,16,0,0x1,0,5,1,yes,0,0x200,0,magic,0,0x0,	SL_GUNNER,Spirit of the Gunslinger
+//------------------------------------------------------------------------------
+
+
+
+db/import/skill_require_db.txt
+//------------------------------------------------------------------------------
+574,0,0,460:360:260:160:60,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0				//SL_NINJA
+575,0,0,460:360:260:160:60,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0				//SL_GUNNER
+//------------------------------------------------------------------------------
+
+
+
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+	case SL_WIZARD:
+		//NOTE: here, 'type' has the value of the associated MAPID, not of the SC_SPIRIT constant.
+		if (sd && dstsd && !((dstsd->class_&MAPID_UPPERMASK) == type)) {
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			break;
+		}
+		
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	case SL_WIZARD:
+	case SL_GUNNER:
+	case SL_NINJA:
+		//NOTE: here, 'type' has the value of the associated MAPID, not of the SC_SPIRIT constant.
+		if (sd && dstsd && !((dstsd->class_&MAPID_UPPERMASK) == type)) {
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			break;
+		}
+		
+//------------------------------------------------------------------------------
+
+
+
+status.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+	SkillStatusChangeTable[skill_get_index(SL_HUNTER)]	= (sc_type)MAPID_HUNTER,
+	SkillStatusChangeTable[skill_get_index(SL_SOULLINKER)]	= (sc_type)MAPID_SOUL_LINKER,
+	
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	SkillStatusChangeTable[skill_get_index(SL_HUNTER)]	= (sc_type)MAPID_HUNTER,
+	SkillStatusChangeTable[skill_get_index(SL_SOULLINKER)]	= (sc_type)MAPID_SOUL_LINKER,
+	SkillStatusChangeTable[skill_get_index(SL_GUNNER)]	= (sc_type)MAPID_GUNSLINGER,
+	SkillStatusChangeTable[skill_get_index(SL_NINJA)]	= (sc_type)MAPID_NINJA,
+	
+//------------------------------------------------------------------------------
+
+
+
+script_constants.hpp
+//------------------------------------------------------------------------------
+FIND:
+
+	export_constant(SL_BLACKSMITH);
+	export_constant(SL_HUNTER);
+	export_constant(SL_SOULLINKER);
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	export_constant(SL_BLACKSMITH);
+	export_constant(SL_HUNTER);
+	export_constant(SL_SOULLINKER);
+	export_constant(SL_NINJA);
+	export_constant(SL_GUNNER);
+	
+//------------------------------------------------------------------------------
+
+
+
+data/luafiles514/lua files/skillinfoz/skilldescript.lub
+//------------------------------------------------------------------------------
+	[SKID.SL_NINJA] = {
+		"Ninja Spirit",
+		"Max Level: 5",
+		"Skill Form: ^339900Supportive^000000",
+		"Description: ^777777Summon the spirit of history's",
+		"most sneaky Ninja and endow its abilities",
+		"on a targeted Ninja, increasing magical attack",
+		"rate by 30%. Also, increases the MaxHP by",
+		"^0000FFBaseLV*150.^000000",
+		"SP Consumption & Duration by Level",
+		"[Lv 1]: ^777777460 SP, 150 sec^000000",
+		"[Lv 2]: ^777777360 SP, 200 sec^000000",
+		"[Lv 3]: ^777777260 SP, 250 sec^000000",
+		"[Lv 4]: ^777777160 SP, 300 sec^000000",
+		"[Lv 5]: ^77777760 SP, 350 sec^000000"
+	},
+	[SKID.SL_GUNNER] = {
+		"Gunslinger Spirit",
+		"Max Level: 5",
+		"Skill Form: ^339900Supportive^000000",
+		"Description: ^777777Summon the spirit of history's",
+		"most sharp Gunslinger and endow its abilities",
+		"on a targeted Gunslinger, temporarily allowing",
+		"the use of specific-weapon skills by using only",
+		"a revolver. Also, increases the MaxHP by",
+		"^0000FFBaseLV*150.^000000 ^777777Removes the casting time of the",
+		"skill^000000 ^0000FFTracking^000000.",
+		"SP Consumption & Duration by Level",
+		"[Lv 1]: ^777777460 SP, 150 sec^000000",
+		"[Lv 2]: ^777777360 SP, 200 sec^000000",
+		"[Lv 3]: ^777777260 SP, 250 sec^000000",
+		"[Lv 4]: ^777777160 SP, 300 sec^000000",
+		"[Lv 5]: ^77777760 SP, 350 sec^000000"
+	},
+
+//------------------------------------------------------------------------------
+
+
+
+data/luafiles514/lua files/skillinfoz/skillinfolist.lub
+//------------------------------------------------------------------------------
+	[SKID.SL_NINJA] = {
+		"SL_NINJA",
+		SkillName = "Ninja Spirit",
+		MaxLv = 5,
+		SpAmount = { 460, 360, 260, 160, 60 },
+		bSeperateLv = false,
+		AttackRange = { 9, 9, 9, 9, 9 }
+	},
+	[SKID.SL_GUNNER] = {
+		"SL_GUNNER",
+		SkillName = "Gunslinger Spirit",
+		MaxLv = 5,
+		SpAmount = { 460, 360, 260, 160, 60 },
+		bSeperateLv = false,
+		AttackRange = { 9, 9, 9, 9, 9 }
+	},
+
+//------------------------------------------------------------------------------
+
+
+
+data/luafiles514/lua files/skillinfoz/skilltreeview.lub
+//------------------------------------------------------------------------------
+		[23] = SKID.SL_GUNNER,
+		[24] = SKID.SL_NINJA,
+
+//------------------------------------------------------------------------------

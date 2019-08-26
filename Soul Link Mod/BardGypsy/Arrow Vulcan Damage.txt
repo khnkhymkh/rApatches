@@ -1,0 +1,17 @@
+battle.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+		case CG_ARROWVULCAN:
+				skillratio += 100 + 100 * skill_lv;
+			break;
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+		case CG_ARROWVULCAN:
+			if (sd && sd->sc.data[SC_SPIRIT] && sd->sc.data[SC_SPIRIT]->val2 == SL_BARDDANCER)
+				skillratio += 100 + 250 * skill_lv;
+			else
+				skillratio += 100 + 100 * skill_lv;
+			break;

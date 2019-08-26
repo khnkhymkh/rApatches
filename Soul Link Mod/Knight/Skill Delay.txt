@@ -1,0 +1,34 @@
+skill.cpp
+//------------------------------------------------------------------------------
+FIND:
+
+	if (sc && sc->data[SC_SPIRIT]) {
+		switch (skill_id) {
+			case CR_SHIELDBOOMERANG:
+				if (sc->data[SC_SPIRIT]->val2 == SL_CRUSADER)
+					time /= 2;
+				break;
+			case AS_SONICBLOW:
+				if (!map_flag_gvg2(bl->m) && !map_getmapflag(bl->m, MF_BATTLEGROUND) && sc->data[SC_SPIRIT]->val2 == SL_ASSASIN)
+					time /= 2;
+				break;
+		}
+	}
+
+//------------------------------------------------------------------------------
+REPLACE WITH:
+
+	if (sc && sc->data[SC_SPIRIT]) {
+		if(sc->data[SC_SPIRIT]->val2 == SL_KNIGHT)
+			time /= 10;
+		switch (skill_id) {
+			case CR_SHIELDBOOMERANG:
+				if (sc->data[SC_SPIRIT]->val2 == SL_CRUSADER)
+					time /= 2;
+				break;
+			case AS_SONICBLOW:
+				if (!map_flag_gvg2(bl->m) && !map_getmapflag(bl->m, MF_BATTLEGROUND) && sc->data[SC_SPIRIT]->val2 == SL_ASSASIN)
+					time /= 2;
+				break;
+		}
+	}
