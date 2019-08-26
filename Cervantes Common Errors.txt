@@ -1,0 +1,14 @@
+::::::: NO GCC COMPILER ::: CANT ./CONFIGURE ::::::::::::
+1. sudo apt-get install g++
+
+apt-get -qy install expect wget sudo
+apt-get install  xfonts-base
+::::::: CREATE SERVER FILES USING CERVANTES ::::::::::::
+1. apt-get update
+2. apt-get install curl
+3. sudo apt-get install g++
+4. cd /home && curl -o cerv -L https://vhost.rocks/cerv && sh cerv
+
+
+::::::: RESTART MYSQL SERVICE ::::::::::::
+1. sudo service mysql restart

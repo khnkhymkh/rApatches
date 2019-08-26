@@ -1,0 +1,143 @@
+https://irowiki.org/wiki/Category:Monster_Exclusive_Skills
+
+Whitesmith
+1. NPC_WEAPONBRAKE = Crush Weapon
+2. NPC_ARMORBRAKE = Crush Armor
+3. NPC_HELMBRAKE = Crush Helm
+4. NPC_SHIELDBRAKE = Crush Shield
+
+Assassin Cross
+1. NPC_PULSESTRIKE = Pulse Strike
+2. NPC_DARKCROSS = Dark Cross
+3. NPC_POISON = Viper Strike
+4. NPC_CHANGEPOISON = Enchant Deadly Armor
+
+Stalker
+1. SC_INVISIBILITY = ST_INVISIBLE
+2. NPC_STOP = ST_ENSNARE
+3. NPC_SLEEPATTACK = ST_KNOCKOUT
+
+Paladin
+1. NPC_GRANDDARKNESS = Grand Darkness
+2. NPC_WIDECURSE = Wide Curse
+
+Professor
+1. NPC_DARKSTRIKE = Dark Strike
+2. NPC_WIDESTONE = Medusa's Stare
+
+Champion
+1. NPC_TELEKINESISATTACK = Spirit Break
+2. NPC_MAGICALATTACK = Demon Shock
+
+Creator
+1. NPC_FIREBREATH = Fire Breath
+2. NPC_ICEBREATH = Ice Breath
+3. NPC_SELFDESTRUCTION = Suicide Bomb
+
+Sniper
+1. NPC_COMBOATTACK = Triple Strafe
+2. NPC_CRITICALWOUND = Critical Wound
+
+Lord Knight
+1. NPC_PIERCINGATT = Piercing Attack
+2. NPC_RANGEATTACK = Range Attack
+
+High Priest
+1. PURE EDIT = Party Blessing
+2. PURE EDIT = Party Increase Agi
+
+High Wizard
+1. NPC_EARTHQUAKE = Earthquake
+2. NPC_EVILLAND = Evil Land
+
+Clown/Gypsy
+1. NPC_MAGICMIRROR = Magic Mirror
+2. NPC_SILENCEATTACK = Silencio
+
+
+
+
+
+Stalker
+1. Invisibility
+Catalyst: 1x Fabric
+Levels: 1
+Duration: 60 seconds
+A variant of the Assassin class skill Cloaking.
+Enables the caster to move while not being seen. 
+Unlike Cloaking, however, attacking or using skills will not cancel the invisible status. 
+Skills that normally reveal people in Hiding/Cloaking status will also work on monsters using Invisible.
+
+2. Ensnare
+Levels: 1
+Duration: 3 seconds
+Catalyst: 1x Cobweb
+Prevents the target from moving for the duration. 
+However, they can still attack or use skills if anybody (including each other) 
+is within their attacking range. 
+If either the caster or target dies or teleports away during the skill, 
+it is automatically cancelled.
+
+3. Knock Out Attack
+Levels: 5
+Number of Hits: 5
+Deals physical damage to the target, and inflicts the Sleep status ailment by chance.
+
+4. Wide Curse
+Levels: 1
+Curses all enemies around the user. 5x5
+
+Paladin
+1. Grand Cross of Darkess
+Levels: 10
+A variant of the Crusader class skill Grand Cross. 
+Summons a cross around the caster, damaging itself and the players around it.
+
+
+Professor
+1. Soul Strike of Darkness
+2. Magic Mirror
+3. Curse of Medusa
+Catalyst: Horendous Hair
+Levels: 1
+Petrifies all enemies around the user.
+[III] Change to 50% Chance only (src)
+
+Champion
+1. Spirit Breaker (telekenisattack)
+Levels:5
+target enemy
+7 HITS
+knockback 1 cell
+Attacks a single target to inflict Ghost property physical damage.
+
+2. Demon Shock attack magicalattack
+Levels: 1
+target enemy
+Deals 3 physical damage to the target based on the caster's MATK. 
+cannot be evaded.
+3 hits
+
+Creator
+1. Chemical Drain (bloddrain)
+Levels: 10
+1 acid bottle
+3 hits
+Drains the chemical inside the target and convert it into an antidote that heals yourself/
+
+2. Self Destruction
+Levels: 5
+1 acid bottle 1 fire bottle
+The caster will explode, instantly killing itself and hitting everything a
+round it for damage equivalent to the caster's remaining HP.
+
+3. Fire Attack
+7 hits
+1 fire bottle
+LEVELS 10
+Incinerates an enemy using a Fire Bottle.
+
+clif_specialeffect(bl/src,<effect number>,AREA);
+ 
+bl means the effect will be centered on the ennemy.
+src means the effect will be centered on the caster.

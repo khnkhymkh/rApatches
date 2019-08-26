@@ -1,0 +1,2 @@
+4403,Kiel_Card,Kiel-D-01 Card,6,20,,10,,,,,,,,769,,,,,{ bonus bDelayRate,( -30 / isequippedcnt (4403) ); },{},{}
+2703,Expert_Ring,Expert Ring,4,20,,150,,0,,1,0xFFFFFFFE,2,2,136,,50,0,0,{ bonus bDelayRate,-5; bonus bUseSPrate,5; if (isequippedcnt(4403) >= 2 && isequippedcnt (2703) >= 2) {bonus bDelayRate,-20;};},{},{}

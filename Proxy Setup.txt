@@ -1,0 +1,22 @@
+::::::: PROXY SETUP ::::::::::::
+****RO-Server Proxy IP Tables (Replace 0.0.0.0 with your Main Server IP & Port with Your Server Port)
+
+sysctl net.ipv4.ip_forward=1
+iptables -t nat -A PREROUTING -p tcp --dport 6900 -j DNAT --to-destination 0.0.0.0:6900
+iptables -t nat -A PREROUTING -p tcp --dport 5121 -j DNAT --to-destination 0.0.0.0:5121
+iptables -t nat -A PREROUTING -p tcp --dport 6121 -j DNAT --to-destination 0.0.0.0:6121
+iptables -t nat -A POSTROUTING -j MASQUERADE
+
+
+****Allow Ragnarok Online
+iptables -A INPUT -p tcp --dport 6900 -m state --state NEW -j ACCEPT
+iptables -A INPUT -p tcp --dport 5121 -m state --state NEW -j ACCEPT
+iptables -A INPUT -p tcp --dport 6121 -m state --state NEW -j ACCEPT
+
+****Have these rules take effect when iptables is started
+iptables-save
+
+
+Optional:
+Save IPTABLES permanently
+https://sharadchhetri.com/2014/02/16/save-iptables-permanently-on-ubuntu/

@@ -1,0 +1,35 @@
+FLUX CP ERROR FIX!
+
+==================================================
+1.
+go to www/html/phpmyadmin
+open config.inc.php
+$cfg['Servers'][$i]['AllowRoot'] = true;
+
+==================================================
+2.
+login to phpMyAdmin as root
+root password: ragnarok
+create root user with %
+Grant all privilege
+
+==================================================
+3.
+go to etc/mysql/my.cnf
+change bind adress to vps address
+sudo service mysql restart
+
+==================================================
+4.
+go to inter athena
+change 127.0.0.1 to vps address
+change ragnarok (username) to root
+
+==================================================
+5.
+go to flux/servers.php
+change 127.0.0.1 to vps ip
+change ragnarok (username) to root
+
+==================================================
+dont forget to disable root access

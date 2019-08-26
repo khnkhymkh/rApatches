@@ -1,0 +1,75 @@
+MODIFIED SOUL LINKS: 
+
+• Blacksmith / Mastersmith 
+[DONE] - Movement speed increases by 20%
+[DONE] - Cart Termination damage increases by 12%
+	
+• Alchemist / Creator
+[DONE] - Acid Terror becomes a splash skill in an area of 2x2 around the target player or mob.
+[DONE] - Acid Terror damage ratio increase from [40 * skill_lv] to [110 * skill_lv]
+[DONE] - Acid Demonstration damage increases by 12%
+
+• Assassin / Assassin Cross
+[DONE] - Sonic Blow buff removed.
+[DONE] - All status increase by 5.
+
+• Crusader / Paladin
+[DONE] -  Shield Charge damage ratio increases from [20 * skill_lv] to [60 * skill_lv]
+	
+• Bard / Clown / Dancer / Gypsy
+[DONE] - Double Strafe damage ratio increases from [10 * (skill_lv - 1)] to [30 * skill_lv]
+[DONE] - Arrow Vulcan damage ratio increases from  to [100 + 100 * skill_lv] to [100 + 250 * skill_lv]
+	
+• Hunter / Sniper 
+[DONE] - There is a 0.3%*LUK chance of Falcon Assault occurring automatically per shot with a bow (independently from Blitz Beat). 
+[DONE] - Double Strafe damage ratio increases from [10 * (skill_lv - 1)] to [30 * skill_lv]
+
+• Priest / High Priest
+[DONE] - Enables to use level 7 Reflect Shield.
+
+• Rogue / Stalker
+[DONE] - Double Strafe damage ratio increases from [10 * (skill_lv - 1)] to [30 * skill_lv]
+[DONE] - Forcibly strip a single equipment by consuming 1x Glistening Coat when the target has Full Chemical Protection. (50% Chance)
+
+• Wizard / High Wizard
+[DONE] - Maximum HP increases by BaseLvl * 100 HP
+[DONE] - Vitality increases by (INT / 5).
+
+• Sage / Professor
+[DONE] - Maximum HP increases by BaseLvl * 100 HP
+[DONE] - Vitality increases by (INT / 5).
+
+• Knight / Lord Knight
+[DONE] - Parrying can also be used with One Hand Swords with a block chance of 3*SkillLV%.
+[DONE] - Spear Boomerang damage ratio increases from [50 * skill_lv] to [200 * skill_lv].
+[DONE] - All skill delay will be reduced from 100% to 90%.
+
+• Star Gladiator 
+[DONE] - Increase damage on Boss monster and Holy monster by 30%.
+[DONE] - Enables to use level 10 Parrying and Lord of Vermillion
+[DONE] - Maximum HP increases by BaseLvl * 50
+
+• Gunslinger
+[DONE] - Enables the use of any weapon-specific skills by using a Revolver.
+[DONE] - Tracking casting time is removed.
+[DONE] - Maximum HP increases by BaseLvl * 150
+	
+• Ninja
+[DONE] - Magical Attack rate increases by 30%
+[DONE] - Maximum HP increases by BaseLvl * 150
+
+
+
+
+
+
+- Heal and Potion Pitcher on Emperium
+[DONE] - Old FCP Status
+[DONE] - Devotion Buffs Icon
+[DONE] - Fire Pillar bypass Land Protection
+[DONE] - Asura Strike slide animation
+[DONE] - Remove Emperium HP Bar
+[DONE] - Cell Skill Knockback
+[DONE] - Unstoppable Sonic Blow Injustice Card
+[DONE] - SP Cap Asura
+[DONE] - Weapon Refine Message
