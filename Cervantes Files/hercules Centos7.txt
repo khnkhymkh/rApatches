@@ -1,0 +1,187 @@
+##############################################
+#####         Emulator: Hercules         #####
+#####          OS: Centos7 x64           #####
+##############################################
+
+
+##############################################
+#####       Packages Installation        #####
+##############################################
+yum update
+yum -y install epel-release
+yum -y install centos-release-scl
+yum -y install devtoolset-7-gcc devtoolset-7-gcc-c++
+source scl_source enable devtoolset-7
+yum -y install mariadb mariadb-devel mariadb-server pcre-devel zlib-devel git
+yum -y install dos2unix gdb nano screen unzip wget zip
+yum -y install mariadb-server mariadb
+systemctl start mariadb.service
+systemctl enable mariadb.service
+
+
+##############################################
+#####     PHP and HTTPD Installation     #####
+##############################################
+yum -y install httpd php
+systemctl start httpd.service
+systemctl enable httpd.service
+
+yum search php
+yum -y install php-mysql
+yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-snmp php-soap curl curl-devel
+systemctl restart httpd.service
+
+
+##############################################
+#####      PhpMyAdmin Installation       #####
+##############################################
+yum -y install phpMyAdmin
+
+[ 1 ] Open WinSCP and go to: /etc/httpd/conf.d/
+[ 2 ] Replace all the content with:
+Alias /phpMyAdmin /usr/share/phpMyAdmin
+Alias /phpmyadmin /usr/share/phpMyAdmin
+
+#<Directory /usr/share/phpMyAdmin/>
+#   <IfModule mod_authz_core.c>
+#     # Apache 2.4
+#     <RequireAny>
+#       Require ip 127.0.0.1
+#       Require ip ::1
+#     </RequireAny>
+#   </IfModule>
+#   <IfModule !mod_authz_core.c>
+#     # Apache 2.2
+#     Order Deny,Allow
+#     Deny from All
+#     Allow from 127.0.0.1
+#     Allow from ::1
+#   </IfModule>
+#</Directory>
+
+
+<Directory /usr/share/phpMyAdmin/>
+        Options none
+        AllowOverride Limit
+        Require all granted
+</Directory>
+
+systemctl restart httpd.service
+
+
+##############################################
+#####         MYSQL Installation         #####
+##############################################
+mysql_secure_installation
+mysql -u root -p
+***- INPUT root password
+> CREATE DATABASE ragnarok;
+> CREATE DATABASE log;
+
+##############################################
+##### Change 1.1.1.1 to your Server's IP #####
+##############################################
+> GRANT ALL PRIVILEGES ON ragnarok.* TO root@1.1.1.1 IDENTIFIED BY 'your_password';
+> GRANT ALL PRIVILEGES ON log.* TO root@1.1.1.1 IDENTIFIED BY 'your_password';
+> FLUSH PRIVILEGES;
+
+##############################################
+#####    Additional: For Webhosting      #####
+##### Change 1.1.1.1 to your Webhost IP  #####
+##############################################
+> GRANT ALL PRIVILEGES ON ragnarok.* TO root@1.1.1.1 IDENTIFIED BY 'your_password';
+> FLUSH PRIVILEGES;
+
+
+##############################################
+##    Allow Port:80 for IP/PhpMyAdmin       ##
+##############################################
+yum -y install firewalld
+systemctl enable firewalld
+systemctl start firewalld
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --reload
+
+
+##############################################
+##      Allow LOGIN, CHAR, MAP Ports        ##
+##############################################
+iptables -I INPUT 1 -p tcp --dport 6900 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 5121 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 6121 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 3306 -j ACCEPT
+iptables-save
+
+
+##############################################
+##      Create new user, since Herc         ##
+##           don't allow root               ##
+##############################################
+useradd your_username
+passwd your_username
+***- INPUT your_password
+chown your_username /home
+
+##############################################
+##      Installing Hercules Emulator        ##
+##############################################
+
+[ 1 ] Open new terminal and login using new user
+
+[ 2 ] Clone the repository
+cd /home
+git clone https://github.com/HerculesWS/Hercules.git /home/hercules
+
+[ 3 ] Import tables to the database. Enter password each time.
+cd /home/hercules/sql-files/
+mysql -u root -p ragnarok < main.sql
+mysql -u root -p ragnarok < logs.sql
+mysql -u root -p ragnarok < item_db2.sql
+mysql -u root -p ragnarok < mob_db2.sql
+mysql -u root -p ragnarok < mob_skill_db2.sql
+
+[ 3a ] Additional for PRE-RENEWAL server
+mysql -u root -p ragnarok < item_db.sql
+mysql -u root -p ragnarok < mob_db.sql
+mysql -u root -p ragnarok < mob_skill_db.sql
+
+[ 3b ] Additional for RENEWAL server
+mysql -u root -p ragnarok < item_db_re.sql
+mysql -u root -p ragnarok < mob_db_re.sql
+mysql -u root -p ragnarok < mob_skill_db_re.sql
+
+
+
+
+##############################################
+##          TROUBLESHOOTING GUIDES          ##
+##############################################
+
+[ 1 ] If ./configure is denied, simply type the following:
+chmod +x configure
+chmod +x config.status
+
+[ 2 ] If make clean && make sql is denied, execute:
+chown -R root /home/hercules
+chmod -R 777 /home/hercules
+
+[ 3 ] Compiling (user must not be root)
+scl enable devtoolset-7 bash
+./configure
+make clean
+make all
+
+##############################################
+##            TMUX Installation             ##
+##############################################
+yum -y install tmux
+
+[ 1 ] TMUX Craating of new session
+tmux new -s login-server
+tmux new -s char-server
+tmux new -s map-server
+
+[ 2 ] TMUX Entering the session 
+tmux attach-session -t login-server
+tmux attach-session -t char-server
+tmux attach-session -t map-server

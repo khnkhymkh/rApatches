@@ -1,0 +1,159 @@
+sudo yum update
+yum -y install epel-release
+sudo yum install centos-release-scl
+sudo yum install devtoolset-7-gcc devtoolset-7-gcc-c++
+source scl_source enable devtoolset-7
+sudo yum install mariadb mariadb-devel mariadb-server pcre-devel zlib-devel git
+yum -y install dos2unix gdb nano screen unzip wget zip
+yum -y install mariadb-server mariadb
+systemctl start mariadb.service
+systemctl enable mariadb.service
+
+yum -y install httpd
+systemctl start httpd.service
+systemctl enable httpd.service
+
+yum -y install php
+systemctl restart httpd.service
+
+yum search php
+yum -y install php-mysql
+yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-snmp php-soap curl curl-devel
+systemctl restart httpd.service
+
+yum install phpMyAdmin
+
+Open WinSCP and go to: /etc/httpd/conf.d/
+Replace with:
+Alias /phpMyAdmin /usr/share/phpMyAdmin
+Alias /phpmyadmin /usr/share/phpMyAdmin
+
+#<Directory /usr/share/phpMyAdmin/>
+#   <IfModule mod_authz_core.c>
+#     # Apache 2.4
+#     <RequireAny>
+#       Require ip 127.0.0.1
+#       Require ip ::1
+#     </RequireAny>
+#   </IfModule>
+#   <IfModule !mod_authz_core.c>
+#     # Apache 2.2
+#     Order Deny,Allow
+#     Deny from All
+#     Allow from 127.0.0.1
+#     Allow from ::1
+#   </IfModule>
+#</Directory>
+
+
+<Directory /usr/share/phpMyAdmin/>
+        Options none
+        AllowOverride Limit
+        Require all granted
+</Directory>
+
+systemctl restart  httpd.service
+
+mysql_secure_installation
+
+mysql -u root -p
+- input root password
+> CREATE DATABASE ragnarok;
+> CREATE DATABASE log;
+> grant all privileges on ragnarok.* to root@149.28.142.54 identified by 'KKK1q2w3e';
+> grant all privileges on log.* to root@149.28.142.54 identified by 'KKK1q2w3e';
+> grant all privileges on ragnarok.* to root@54.36.167.79 identified by 'Qweqwe123'; (WEBHOST TO)
+> flush privileges;
+
+
+//Allow port 80 for the IP/phpmyadmmin to work
+yum install firewalld
+systemctl enable firewalld
+systemctl start firewalld
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --reload
+iptables-save | grep 80
+-A IN_public_allow -p tcp -m tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+
+//Installing TMUX
+yum install tmux
+
+//TMUX Craating of new session
+tmux new -s login-server
+tmux new -s char-server
+tmux new -s map-server
+
+//TMUX Entering the session 
+tmux attach-session -t login-server
+tmux attach-session -t char-server
+tmux attach-session -t map-server
+
+//Allowing of PORTS of login, char and map server
+iptables -I INPUT 1 -p tcp --dport 6900 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 5121 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 6121 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 3306 -j ACCEPT
+iptables-save
+
+SPECIAL NOTE: Because hercules doesn't work if you use root login, we will create a new user.
+useradd ragnarok
+passwd ragnarok [choose_a_password]
+
+chown ragnarok /home
+
+1. Login again in Kitty with the new user ragnarok
+2. Download Hercules emulator
+cd /home
+git clone https://github.com/HerculesWS/Hercules.git /home/hercules
+
+3. We will need to reach the database installation folder:
+cd /home/hercules/sql-files/
+
+4. We will now import tables in the database. You will have to write your mysql password each time (set in step B.4).
+mysql -u root -p ragnarok < main.sql
+mysql -u root -p ragnarok < logs.sql
+mysql -u root -p ragnarok < item_db2.sql
+mysql -u root -p ragnarok < mob_db2.sql
+mysql -u root -p ragnarok < mob_skill_db2.sql
+
+5. if you want to make a PRE-RENEWAL server, enter also this
+mysql -u root -p ragnarok < item_db.sql
+mysql -u root -p ragnarok < mob_db.sql
+mysql -u root -p ragnarok < mob_skill_db.sql
+
+6 If you want to make a RENEWAL server:
+mysql -u root -p ragnarok < item_db_re.sql
+mysql -u root -p ragnarok < mob_db_re.sql
+mysql -u root -p ragnarok < mob_skill_db_re.sql
+
+// Trouble shooting guide ========
+
+/// If ./configure is denied simply type these following.
+chmod +x configure
+chmod +x config.status
+
+/// If make clean && make sql is denied execute
+chown -R root /home/hercules
+chmod -R 777 /home/hercules
+
+// How to compile
+// Enter as non root- hercules/password
+scl enable devtoolset-7 bash
+./configure
+make clean
+make all
+
+// Bonus ==========================
+//Installing TMUX
+yum install tmux
+
+//TMUX Craating of new session
+tmux new -s login-server
+tmux new -s char-server
+tmux new -s map-server
+
+//TMUX Entering the session 
+tmux attach-session -t login-server
+tmux attach-session -t char-server
+tmux attach-session -t map-server
+

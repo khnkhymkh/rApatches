@@ -15,3 +15,12 @@ REPLACE WITH:
 		clif_status_change(bl,StatusIconChangeTable[type],1,tick,(val_flag&1)?val1:1,(val_flag&2)?val2:0,(val_flag&4)?val3:0);
 
 	// Used as temporary storage for scs with interval ticks, so that the actual duration is sent to the client first.
+
+
+
+//------------------------------------------------------------------------------
+if(!(flag & SCFLAG_NOICON) && !(flag & SCFLAG_LOADED && status->dbs->DisplayType[type]))
+if(!(flag&SCSTART_NOICON) && !(flag&SCSTART_LOADED && StatusDisplayType[type]))﻿
+
+if(!(flag & SCFLAG_LOADED && status->dbs->DisplayType[type]))
+if(!(flag&SCSTART_LOADED && StatusDisplayType[type]))
