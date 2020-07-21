@@ -153,11 +153,11 @@ chmod +x config.status
 chown -R root /home/hercules
 chmod -R 777 /home/hercules
 
-[ 3 ] Compiling (user must not be root)
+[ 3 ] Compiling
 scl enable devtoolset-7 bash
 ./configure
 make clean
-make all
+make server
 
 ##############################################
 ##            TMUX Installation             ##
