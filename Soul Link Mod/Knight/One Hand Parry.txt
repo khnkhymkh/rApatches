@@ -73,3 +73,41 @@ REPLACE WITH:
 
 	if( require.ammo ) { //Skill requires stuff equipped in the ammo slot.
 		uint8 extra_ammo = 0;
+
+
+
+##########
+HERCULES
+##########
+skill.c
+
+FIND:
+	static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
+	{
+		struct skill_condition require;
+		struct status_data *st;
+		int i;
+//------------------------------------------------------------------------------
+REPLACE WITH:
+	static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
+	{
+		struct skill_condition require;
+		struct status_data *st;
+		struct status_change *sc = &sd->sc;
+		int i;
+		
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+FIND (2X):
+	if( require.weapon && !pc_check_weapontype(sd,require.weapon) ) {
+		clif->skill_fail(sd, skill_id, USESKILL_FAIL_THIS_WEAPON, 0, 0);
+		return 0;
+	}
+//------------------------------------------------------------------------------
+REPLACE WITH (2X):
+	if( require.weapon && !(pc_check_weapontype(sd,require.weapon) ||
+		(skill_id == LK_PARRYING && sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_KNIGHT && sd->weapontype == W_1HSWORD))) {
+ 		clif->skill_fail(sd,skill_id,USESKILL_FAIL_THIS_WEAPON,0,0);
+ 		return 0;
+ 	}
