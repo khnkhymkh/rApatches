@@ -48,27 +48,20 @@ REPLACE WITH:
 ########
 hercules
 ########
-			// Full Chemical Protection
+		case CR_FULLPROTECTION:
+			// Full Chemical Protection OLD
 			{
 				unsigned int equip[] = { EQP_WEAPON, EQP_SHIELD, EQP_ARMOR, EQP_HEAD_TOP };
 				int i, s = 0, skilltime = skill->get_time(skill_id, skill_lv);
-				for ( i = 0; i < 4; i++ ) {
-					if ( bl->type != BL_PC || (dstsd && pc->checkequip(dstsd, equip[i]) < 0) )
-						continue;
-					if ( dstsd && equip[i] == EQP_SHIELD ) {
-						short index = dstsd->equip_index[EQI_HAND_L];
-						if ( index >= 0 && dstsd->inventory_data[index] && dstsd->inventory_data[index]->type != IT_ARMOR )
-							continue;
-					}
-					sc_start(src, bl, (sc_type)(SC_PROTECTWEAPON + i), 100, skill_lv, skilltime);
-					s++;
-				}
-				if ( sd && !s ) {
+			for (i = 0; i < 4; i++) {
+				status_change_end(bl, (sc_type)(RG_STRIPWEAPON + i), INVALID_TIMER);
+				sc_start(src,bl,(sc_type)(SC_PROTECTWEAPON + i),100,skill_lv,skilltime);
+				s++;
+			}
+			if ( sd && !s ) {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					map->freeblock_unlock(); // Don't consume item requirements
 					return 0;
 				}
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			}
-		}
-		break;
