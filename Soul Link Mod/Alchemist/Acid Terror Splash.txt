@@ -42,3 +42,22 @@ REPLACE WITH:
 		} else
 			skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 		break;
+		
+
+########
+HERCULES
+########
+	case AM_ACIDTERROR:
+		if (!(flag&1) && sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ALCHEMIST) {	
+				//Becomes a splash attack when Soul Linked.
+				map->foreachinrange(skill->area_sub, bl,
+				                    skill->get_splash(skill_id, skill_lv),skill->splash_target(src),
+				                    src,skill_id,skill_lv,tick, flag|BCT_ENEMY|1,
+				                    skill->castend_damage_id);
+			} else
+				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
+			break;
+
+
+note:
+edit skill db for splash range

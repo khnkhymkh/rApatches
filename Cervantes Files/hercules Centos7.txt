@@ -185,3 +185,14 @@ tmux new -s map-server
 tmux attach-session -t login-server
 tmux attach-session -t char-server
 tmux attach-session -t map-server
+
+##############################################
+##    IF NO APACHE/HTTPD AND PHPMYADMIN     ##
+##############################################
+[ 1 ] Install Navicat Premium on Windows
+[ 2 ] On your server, type the following:
+mysql -u root -p
+
+> CREATE USER 'root'@'Your_WAN_IP' IDENTIFIED BY 'KKK1q2w3e';
+> GRANT ALL PRIVILEGES ON *.* TO 'root'@'Your_WAN_IP' WITH GRANT OPTION;
+> FLUSH PRIVILEGES;

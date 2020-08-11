@@ -86,3 +86,54 @@ REPLACE WITH:
 	}
 
 	case AM_BERSERKPITCHER:
+
+
+
+
+
+
+
+
+
+##########
+HERCULES
+##########
+
+			// By pass FCP when using single strip skills by 15%(requires Glistening Coat).
+			if ( sd && tsc && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE && rand()%100 < 15
+						 &&
+						( skill_id == RG_STRIPWEAPON && tsc->data[SC_PROTECTWEAPON] ||
+						skill_id == RG_STRIPSHIELD && tsc->data[SC_PROTECTSHIELD] ||
+						skill_id == RG_STRIPARMOR && tsc->data[SC_PROTECTARMOR] ||
+						skill_id == RG_STRIPHELM && tsc->data[SC_PROTECTHELM] ) ) {
+						int item_id = 7139; // Glistening Coat
+						int ii;
+						ARR_FIND( 0, MAX_INVENTORY, ii, sd->status.inventory[ii].nameid == item_id );
+						if ( ii < MAX_INVENTORY ) {
+							pc->delitem( sd, ii, 1, 0, 0, LOG_TYPE_CONSUME);
+							switch ( skill_id ) {
+								case RG_STRIPWEAPON:
+									status_change_end( bl, SC_PROTECTWEAPON, INVALID_TIMER );
+									sc_start( NULL, bl, SC_NOEQUIPWEAPON, 100, skill_lv, d );
+									clif->message(sd->fd, "~ Weapon Strip Successful !!");
+									break;
+								case RG_STRIPSHIELD:
+									status_change_end( bl, SC_PROTECTSHIELD, INVALID_TIMER );
+									sc_start( NULL, bl, SC_NOEQUIPSHIELD, 100, skill_lv, d );
+									clif->message(sd->fd, "~ Shield Strip Successful !!");
+									break;
+								case RG_STRIPARMOR:
+									status_change_end( bl, SC_PROTECTARMOR, INVALID_TIMER );
+									sc_start( NULL, bl, SC_NOEQUIPARMOR, 100, skill_lv, d );
+									clif->message(sd->fd, "~ Armor Strip Successful !!");
+									break;
+								case RG_STRIPHELM:
+									status_change_end( bl, SC_PROTECTHELM, INVALID_TIMER );
+									sc_start( NULL, bl, SC_NOEQUIPHELM, 100, skill_lv, d );
+									clif->message(sd->fd, "~ Helm Strip Successful !!");
+									break;
+							}
+							clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+							break;
+						}
+					}
